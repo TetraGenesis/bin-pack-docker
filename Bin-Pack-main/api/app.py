@@ -5,7 +5,7 @@ from typing import List, Dict
 
 app = flask.Flask(__name__)
 problemIDDict: Dict[int, str] = {}
-
+binSizeDict: Dict[int, int] = {}
 def encodeBinSet(binDict: Dict[int, List[str]]) -> str:
     """Encode the specified bin set into a string"""
     encodedString: str = ''
@@ -42,7 +42,7 @@ def newProblem() -> str:
     """Generate a new problem."""
     problemID: int = uuid.uuid4().int % (10**10)
     problemIDDict[problemID] = encodeBinSet({})
-
+    binSizeDict[problemID] = 50
     return json.dumps({
         'ID': problemID,
         'bins': problemIDDict[problemID]
@@ -54,13 +54,13 @@ def placeItem(problemID: int, size: int) -> str:
     if problemID not in problemIDDict:
         return json.dumps({'error': 'Invalid problemID'}), 400
 
-    if size > 100 or size <= 0:
-        return json.dumps({'error': 'Invalid size. Size must be between 1 and 100 inclusive.'}), 400
+    if size > binSizeDict[problemID] or size <= 0:
+        return json.dumps({'error': 'Invalid size. Size must be between 1 and {binSizeDict[problemID]} inclusive.'}), 400
 
     decodedBins: Dict[int, List[str]] = decodeBinSet(problemIDDict[problemID])
 
     for bin, items in decodedBins.items():
-        if not items or sum(map(int, items)) + size <= 100:
+        if not items or sum(map(int, items)) + size <= binSizeDict[problemID]:
             items.append(str(size))
             problemIDDict[problemID] = encodeBinSet(decodedBins)
             return json.dumps({
@@ -98,7 +98,7 @@ def endproblem(problemID: int) -> str:
         'size': total_size,
         'items': num_items,
         'count': len(decodedBins),
-        'wasted': 100 * len(decodedBins) - total_size,
+        'wasted': binSizeDict[problemID] * len(decodedBins) - total_size,
         'bins': finalEncodedBins
     })
 
