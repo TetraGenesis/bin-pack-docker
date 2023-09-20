@@ -92,6 +92,7 @@ def endproblem(problemID: int) -> str:
     total_size: int = sum(int(item) for items in decodedBins.values() for item in items)
     num_items: int = sum(len(items) for items in decodedBins.values())
     finalEncodedBins: str = problemIDDict.pop(problemID)
+    binSizeDict.pop(problemID)
 
     return json.dumps({
         'ID': problemID,
