@@ -6,10 +6,10 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    response = requests.get('http://api:5000/')
+    response = requests.get('http://api:5000/newproblem')
     jsonResponse = response.json()
-    num = jsonResponse['rand'];    
-    return render_template("index.html", randNum = num)
+    problemID = jsonResponse['ID']
+    
 
 if __name__ == '__main__':
     app.run(port=5000)
