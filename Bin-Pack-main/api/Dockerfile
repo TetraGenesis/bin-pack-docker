@@ -7,26 +7,25 @@ FROM python:3.7-alpine
 WORKDIR /code
 
 # We set some Environment variables in the container which Flask uses
-ENV FLASK_APP=app.py
+ENV FLASK_APP=api.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
-# We install Flask and requests in the container using Pip
+# We install Flask in the container using Pip
 RUN pip install flask
-RUN pip install requests
 
 # We want port 5000 (the default Flask port) to be used outside the container
 EXPOSE 5000
 
 # We copy everything in the current directory on our machine 
 # ... into the working directory in the container 
-# (In particular, this includes app.py)
+# (In particular, this includes api.py)
 COPY . .
 
 # When the container starts running,
 #    This is the command that we want to be executed
 #       flask run
-CMD ["flask", "run"] 
+CMD ["flask", "run", "api.py"] 
 
 # Note: The following also works ...
-#   CMD ["python3", "app.py"]
+#   CMD ["python3", "api.py"]
  

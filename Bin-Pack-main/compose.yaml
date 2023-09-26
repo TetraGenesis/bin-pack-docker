@@ -8,10 +8,16 @@
 
 services:
     web:
-        build: ./web
+        container_name: web
+        build:
+          context: .
+          target: web
         ports:
           - "7555:5000"
     api:
-        build: ./api
+        container_name: api
+        build:
+          context: .
+          target: api
         expose:
           - "5000"
